@@ -7,6 +7,13 @@ const {
   addContact,
   updateContact,
 } = require("../../models/contacts");
+const Joi = require("joi");
+
+const contactSchema = Joi.object({
+  name: Joi.string().required(),
+  email: Joi.string().email().required(),
+  phone: Joi.string().required(),
+});
 
 router.get("/", async (req, res, next) => {
   try {
@@ -60,7 +67,13 @@ router.put("/:contactId", async (req, res, next) => {
   try {
     const { name, email, phone } = req.body;
     if (!name && !email && !phone) {
-      return res.status(400).json({ message: "Not found" });
+      return res.status(400).json({ message: "missing fields" });
+    }
+    const updatedContact = await updateContact(req.params.contactId, req.body);
+    if (updatedContact) {
+      res.status(200).json(updateContact);
+    } else {
+      res.status(404).json({ message: "Not found" });
     }
   } catch (error) {
     next(error);
