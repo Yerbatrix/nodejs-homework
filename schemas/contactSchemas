@@ -1,0 +1,17 @@
+const Joi = require("joi");
+
+const contactSchema = Joi.object({
+  name: Joi.string().min(2).max(70).required(),
+  email: Joi.string().email().min(3).max(170).required(),
+  phone: Joi.string().min(3).max(170).required(),
+  favorite: Joi.boolean(),
+});
+
+const statusSchema = Joi.object({
+  favorite: Joi.boolean().required(),
+});
+
+module.exports = {
+  contactSchema,
+  statusSchema,
+};

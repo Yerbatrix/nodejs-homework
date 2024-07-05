@@ -4,7 +4,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-const contactsRouter = require("./routes/api/contacts");
+const contactsRouter = require("./api");
 
 const app = express();
 
@@ -14,14 +14,25 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/contacts", contactsRouter);
+app.use("/api", contactsRouter);
 
 app.use((req, res) => {
-  res.status(404).json({ message: "Not found" });
+  res.status(404).json({
+    status: "error",
+    code: 404,
+    message: "Use api on routes: /api/contacts",
+    data: "Not found",
+  });
 });
 
 app.use((err, req, res, next) => {
-  res.status(500).json({ message: err.message });
+  console.log(err.stack);
+  res.status(500).json({
+    status: "fail",
+    code: 500,
+    message: err.message,
+    data: "Internal Server Error",
+  });
 });
 
 const { DB_HOST } = process.env;
