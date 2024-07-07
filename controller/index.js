@@ -64,6 +64,14 @@ const create = async (req, res, next) => {
     });
   } catch (e) {
     console.error(e);
+    if (e.message === "Email already in use") {
+      return res.status(400).json({
+        status: "error",
+        code: 400,
+        message: "Email already in use",
+        data: "Bad Request",
+      });
+    }
     next(e);
   }
 };

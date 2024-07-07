@@ -15,6 +15,7 @@ const contact = new Schema(
       minlength: 3,
       maxlength: 170,
       required: true,
+      unique: true,
     },
     phone: {
       type: String,
@@ -25,6 +26,10 @@ const contact = new Schema(
     favorite: {
       type: Boolean,
       default: false,
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
   },
   { versionKey: false, timestamps: true }

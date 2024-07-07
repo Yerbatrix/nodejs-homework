@@ -11,9 +11,14 @@ const getContactById = (id) => {
   return Contact.findOne({ _id: id });
 };
 
-const createContact = ({ name, email, phone }) => {
+const createContact = async ({ name, email, phone }) => {
+  const existingContact = await Contact.findOne({ email });
+  if (existingContact) {
+    throw new Error("Email already in use");
+  }
+  const newContact = new Contact({ name, email, phone });
   console.log("Creating contact:", { name, email, phone });
-  return Contact.create({ name, email, phone });
+  return await newContact.save();
 };
 
 const updateContact = (id, fields) => {
