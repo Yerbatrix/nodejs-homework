@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Joi = require("joi");
 const Schema = mongoose.Schema;
 
 const contact = new Schema(
@@ -29,6 +30,13 @@ const contact = new Schema(
   { versionKey: false, timestamps: true }
 );
 
+const contactValidationSchema = Joi.object({
+  name: Joi.string().min(2).max(70).required(),
+  email: Joi.string().min(3).max(170).required(),
+  phone: Joi.string().min(3).max(170).required(),
+  favorite: Joi.boolean(),
+});
+
 const Contact = mongoose.model("contact", contact);
 
-module.exports = Contact;
+module.exports = { Contact, contactValidationSchema };
