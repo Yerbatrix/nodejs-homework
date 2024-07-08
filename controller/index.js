@@ -3,7 +3,8 @@ const { contactValidationSchema } = require("../service/schemas/contact");
 
 const get = async (req, res, next) => {
   try {
-    const results = await service.getAllContacts();
+    const userId = req.user._id;
+    const results = await service.getAllContacts(userId);
     console.log("Fetched contacts:", results);
     res.json({
       status: "success",
@@ -20,8 +21,9 @@ const get = async (req, res, next) => {
 
 const getById = async (req, res, next) => {
   const { id } = req.params;
+  const userId = req.user._id;
   try {
-    const result = await service.getContactById(id);
+    const result = await service.getContactById(id, userId);
     console.log("Fetched contact by ID:", result);
     if (result) {
       res.json({
@@ -45,6 +47,8 @@ const getById = async (req, res, next) => {
 
 const create = async (req, res, next) => {
   const { name, email, phone } = req.body;
+  const userId = req.user._id;
+  console.log(userId);
   const { error } = contactValidationSchema.validate({ name, email, phone });
   if (error) {
     return res.status(400).json({
@@ -55,7 +59,12 @@ const create = async (req, res, next) => {
     });
   }
   try {
-    const result = await service.createContact({ name, email, phone });
+    const result = await service.createContact({
+      name,
+      email,
+      phone,
+      owner: userId,
+    });
     console.log("Created contact:", result);
     res.status(201).json({
       status: "success",
@@ -79,6 +88,7 @@ const create = async (req, res, next) => {
 const update = async (req, res, next) => {
   const { id } = req.params;
   const { name, email, phone } = req.body;
+  const userId = req.user._id;
   const { error } = contactValidationSchema.validate({
     name,
     email,
@@ -93,7 +103,11 @@ const update = async (req, res, next) => {
     });
   }
   try {
-    const result = await service.updateContact(id, { name, email, phone });
+    const result = await service.updateContact(
+      id,
+      { name, email, phone },
+      userId
+    );
     console.log("Updated contact:", result);
     if (result) {
       res.json({
@@ -118,6 +132,7 @@ const update = async (req, res, next) => {
 const updateStatus = async (req, res, next) => {
   const { id } = req.params;
   const { favorite = false } = req.body;
+  const userId = req.user._id;
   const { error } = contactValidationSchema.validate({ favorite });
   if (error) {
     return res.status(400).json({
@@ -128,7 +143,7 @@ const updateStatus = async (req, res, next) => {
     });
   }
   try {
-    const result = await service.updateContact(id, { favorite });
+    const result = await service.updateContact(id, { favorite }, userId);
     console.log("Updated contact status:", result);
     if (result) {
       res.json({
@@ -152,9 +167,9 @@ const updateStatus = async (req, res, next) => {
 
 const remove = async (req, res, next) => {
   const { id } = req.params;
-
+  const userId = req.user._id;
   try {
-    const result = await service.removeContact(id);
+    const result = await service.removeContact(id, userId);
     console.log("Removed contact:", result);
     if (result) {
       res.json({
