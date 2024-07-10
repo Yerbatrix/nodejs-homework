@@ -2,9 +2,10 @@ const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const passport = require("./config/passport");
 require("dotenv").config();
 
-const contactsRouter = require("./api");
+const RouterApi = require("./api");
 
 const app = express();
 
@@ -13,8 +14,9 @@ const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
+app.use(passport.initialize());
 
-app.use("/api", contactsRouter);
+app.use("/api", RouterApi);
 
 app.use((req, res) => {
   res.status(404).json({
