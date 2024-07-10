@@ -15,7 +15,7 @@ router.delete("/contacts/:id", auth, ctrlContact.remove);
 
 router.post("/users/signup", ctrlUser.signup);
 router.post("/users/login", ctrlUser.login);
-router.delete("/users/logout", ctrlUser.auth, ctrlUser.logout);
-router.get("/users/current", auth, ctrlUser.auth, ctrlUser.current);
+router.delete("/users/logout", auth, ctrlUser.logout);
+router.get("/users/current", auth, ctrlUser.current);
 
 module.exports = router;
