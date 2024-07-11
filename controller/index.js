@@ -95,6 +95,11 @@ const create = async (req, res, next) => {
 };
 
 const update = async (req, res, next) => {
+  console.log("Request File:", req.file); // Debugowanie
+
+  if (!req.file) {
+    return res.status(400).json({ message: "No file uploaded" });
+  }
   const { id } = req.params;
   const { name, email, phone } = req.body;
   const userId = req.user._id;

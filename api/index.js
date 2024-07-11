@@ -3,6 +3,7 @@ const router = express.Router();
 const ctrlContact = require("../controller/index");
 const ctrlUser = require("../controller/user");
 const passport = require("passport");
+const upload = require("../middlewares/upload");
 
 const auth = passport.authenticate("jwt", { session: false });
 
@@ -17,5 +18,7 @@ router.post("/users/signup", ctrlUser.signup);
 router.post("/users/login", ctrlUser.login);
 router.delete("/users/logout", auth, ctrlUser.logout);
 router.get("/users/current", auth, ctrlUser.current);
+
+router.patch("/avatars", auth, upload.single("avatar"), ctrlUser.updateAvatar);
 
 module.exports = router;
