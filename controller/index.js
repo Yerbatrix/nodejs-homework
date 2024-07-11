@@ -3,16 +3,25 @@ const { contactValidationSchema } = require("../service/schemas/contact");
 
 const get = async (req, res, next) => {
   try {
+    const { page = 1, limit = 20 } = req.query;
     const userId = req.user._id;
-    const results = await service.getAllContacts(userId);
+    const { results, totalContacts } = await service.getAllContacts(
+      userId,
+      page,
+      limit
+    );
     console.log("Fetched contacts:", results);
     res.json({
       status: "success",
       code: 200,
       data: {
         contacts: results,
+        totalContacts,
+        page: parseInt(page),
+        limit: parseInt(limit),
       },
     });
+    S;
   } catch (e) {
     console.error(e);
     next(e);
