@@ -54,25 +54,6 @@ const login = async (req, res, next) => {
   }
 };
 
-// const auth = async (req, res, next) => {
-//   const authHeader = req.headers.authorization;
-//   if (!authHeader) {
-//     return res.status(401).json({ message: "Not authorized" });
-//   }
-//   const token = authHeader.split(" ")[1];
-//   try {
-//     const payload = jwt.verify(token, process.env.SECRET);
-//     const user = await User.findOne({ _id: payload.id });
-//     if (!user || user.token !== token) {
-//       return res.status(401).json({ message: "Not authorized" });
-//     }
-//     req.user = user;
-//     next();
-//   } catch (error) {
-//     return res.status(401).json({ message: "Not authorized" });
-//   }
-// };
-
 const logout = async (req, res, next) => {
   const userId = req.user._id;
   try {
@@ -157,7 +138,6 @@ const updateSubscription = async (req, res, next) => {
 module.exports = {
   signup,
   login,
-  // auth,
   logout,
   current,
   updateAvatar,
