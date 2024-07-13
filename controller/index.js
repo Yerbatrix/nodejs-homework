@@ -1,16 +1,25 @@
 const service = require("../service");
-const { contactValidationSchema } = require("../service/schemas/contact");
+const {
+  contactValidationSchema,
+  favoriteValidationSchema,
+} = require("../service/schemas/contact");
 
 const get = async (req, res, next) => {
   try {
-    const { page = 1, limit = 20 } = req.query;
+    const { page = 1, limit = 20, favorite } = req.query;
     const userId = req.user._id;
+    const filter = { owner: userId };
+
+    if (favorite !== undefined) {
+      filter.favorite = favorite === "true";
+    }
+
     const { results, totalContacts } = await service.getAllContacts(
       userId,
       page,
-      limit
+      limit,
+      filter
     );
-    console.log("Fetched contacts:", results);
     res.json({
       status: "success",
       code: 200,
@@ -21,7 +30,6 @@ const get = async (req, res, next) => {
         limit: parseInt(limit),
       },
     });
-    S;
   } catch (e) {
     console.error(e);
     next(e);
@@ -95,8 +103,6 @@ const create = async (req, res, next) => {
 };
 
 const update = async (req, res, next) => {
-  console.log("Request File:", req.file); // Debugowanie
-
   if (!req.file) {
     return res.status(400).json({ message: "No file uploaded" });
   }
@@ -145,9 +151,10 @@ const update = async (req, res, next) => {
 
 const updateStatus = async (req, res, next) => {
   const { id } = req.params;
-  const { favorite = false } = req.body;
+  const { favorite } = req.body;
   const userId = req.user._id;
-  const { error } = contactValidationSchema.validate({ favorite });
+
+  const { error } = favoriteValidationSchema.validate({ favorite });
   if (error) {
     return res.status(400).json({
       status: "error",
@@ -156,6 +163,7 @@ const updateStatus = async (req, res, next) => {
       data: "Bad Request",
     });
   }
+
   try {
     const result = await service.updateContact(id, { favorite }, userId);
     console.log("Updated contact status:", result);

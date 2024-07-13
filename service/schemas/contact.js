@@ -42,6 +42,10 @@ const contactValidationSchema = Joi.object({
   favorite: Joi.boolean(),
 });
 
+const favoriteValidationSchema = Joi.object({
+  favorite: Joi.boolean().required(),
+});
+
 const Contact = mongoose.model("contact", contact);
 
-module.exports = { Contact, contactValidationSchema };
+module.exports = { Contact, contactValidationSchema, favoriteValidationSchema };
