@@ -4,6 +4,8 @@ const path = require("path");
 const jwt = require("jsonwebtoken");
 const gravatar = require("gravatar");
 const { User } = require("../service/schemas/user");
+const { subscriptionValidationSchema } = require("../service/schemas/user");
+const userService = require("../service/user");
 require("dotenv").config();
 
 const signup = async (req, res, next) => {
@@ -113,6 +115,45 @@ const updateAvatar = async (req, res, next) => {
   }
 };
 
+const updateSubscription = async (req, res, next) => {
+  const { subscription } = req.body;
+  const userId = req.user._id;
+
+  const { error } = subscriptionValidationSchema.validate({ subscription });
+  if (error) {
+    return res.status(400).json({
+      status: "error",
+      code: 400,
+      message: error.details[0].message,
+      data: "Bad Request",
+    });
+  }
+
+  try {
+    const updatedUser = await userService.updateSubscription(
+      userId,
+      subscription
+    );
+    if (updatedUser) {
+      res.json({
+        status: "success",
+        code: 200,
+        data: { user: updatedUser },
+      });
+    } else {
+      res.status(404).json({
+        status: "error",
+        code: 404,
+        message: `User not found`,
+        data: "Not Found",
+      });
+    }
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+};
+
 module.exports = {
   signup,
   login,
@@ -120,4 +161,5 @@ module.exports = {
   logout,
   current,
   updateAvatar,
+  updateSubscription,
 };

@@ -42,6 +42,10 @@ const userValidationSchema = Joi.object({
   password: Joi.string().min(6).required(),
 });
 
+const subscriptionValidationSchema = Joi.object({
+  subscription: Joi.string().valid("starter", "pro", "business").required(),
+});
+
 const User = mongoose.model("User", userSchema);
 
-module.exports = { User, userValidationSchema };
+module.exports = { User, userValidationSchema, subscriptionValidationSchema };

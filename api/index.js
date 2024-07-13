@@ -21,4 +21,6 @@ router.get("/users/current", auth, ctrlUser.current);
 
 router.patch("/avatars", auth, upload.single("avatar"), ctrlUser.updateAvatar);
 
+router.patch("/users", auth, ctrlUser.updateSubscription);
+
 module.exports = router;
