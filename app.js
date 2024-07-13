@@ -2,6 +2,7 @@ const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const path = require("path");
 const passport = require("./config/passport");
 require("dotenv").config();
 
@@ -15,6 +16,8 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 app.use(passport.initialize());
+
+app.use("/avatars", express.static(path.join(__dirname, "public", "avatars")));
 
 app.use("/api", RouterApi);
 
