@@ -1,4 +1,4 @@
-const service = require("../service");
+const service = require("../service/contacts");
 const { contactValidationSchema } = require("../service/schemas/contact");
 
 const get = async (req, res, next) => {

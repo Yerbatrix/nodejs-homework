@@ -3,9 +3,6 @@ require("dotenv").config({ path: "../.env" });
 
 const { M_USER, M_PASS } = process.env;
 
-console.log("M_USER:", M_USER);
-console.log("M_PASS:", M_PASS);
-
 const transporter = nodemailer.createTransport({
   host: "smtp.mailgun.org",
   port: 587,
@@ -16,10 +13,10 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-async function main(html, subject, to) {
+async function sendEmail(html, subject, to) {
   try {
     const info = await transporter.sendMail({
-      from: '"Maddison Foo Koch 👻" <mailguntest@ethereal.email>',
+      from: '"Yerbatrix NodeJS-homework-App" <Yerbatrix-NodeJS@ethereal.email>',
       to,
       subject,
       html,
@@ -29,6 +26,4 @@ async function main(html, subject, to) {
     console.error("Error sending email:", error);
   }
 }
-main("<b>Hello world?</b>", "Hello ✔", "ruszkowski.pobog@gmail.com").catch(
-  console.error
-);
+module.exports = { sendEmail };
