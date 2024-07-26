@@ -1,6 +1,6 @@
 const express = require("express");
-const router = express.Router();
-const ctrlContact = require("../controller/index");
+const router = new express.Router();
+const ctrlContact = require("../controller/contacts");
 const ctrlUser = require("../controller/user");
 const passport = require("passport");
 
@@ -17,5 +17,7 @@ router.post("/users/signup", ctrlUser.signup);
 router.post("/users/login", ctrlUser.login);
 router.delete("/users/logout", auth, ctrlUser.logout);
 router.get("/users/current", auth, ctrlUser.current);
+router.get("/users/verify/:verificationToken", ctrlUser.verify);
+router.post("/users/verify", ctrlUser.resendVerificationEmail);
 
 module.exports = router;

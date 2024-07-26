@@ -1,4 +1,4 @@
-const service = require("../service");
+const service = require("../service/contacts");
 const { contactValidationSchema } = require("../service/schemas/contact");
 
 const get = async (req, res, next) => {
@@ -48,7 +48,6 @@ const getById = async (req, res, next) => {
 const create = async (req, res, next) => {
   const { name, email, phone } = req.body;
   const userId = req.user._id;
-  console.log(userId);
   const { error } = contactValidationSchema.validate({ name, email, phone });
   if (error) {
     return res.status(400).json({

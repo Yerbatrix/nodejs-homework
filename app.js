@@ -7,7 +7,7 @@ require("dotenv").config();
 
 const RouterApi = require("./api");
 
-const app = express();
+const app = new express();
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
